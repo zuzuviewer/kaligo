@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <title>kuligo</title>
+</head>
+<body>
+<div>
+    <label for="original"></label>
+    <pre><code>
+    <textarea required wrap="hard" class="original" id="original"
+              style="flex: auto;height: 300px;width: 1200px"></textarea>
+</code></pre>
+</div>
+<div>
+    <button class="json2yaml" id="json2yaml" name="json2yaml" onclick="json2yaml()"
+            style="width: 100px;height: 40px;margin-left: 40px;background-color: #4b6eef;color: white">json2yaml
+    </button>
+    <button class="yaml2json" id="yaml2json" value="yaml2json" onclick="yaml2json()"
+            style="width: 100px;height: 40px;margin-left: 10px;background-color: #4bbeef;color: white">yaml2json
+    </button>
+    <button class="json2string" id="json2string" value="json compact" onclick="json2string()"
+            style="width:100px;height: 40px;margin-left: 10px;background-color: #4b6eef;color: white">compact json
+    </button>
+    <button class="string2json" id="string2json" value="json pretty" onclick="string2json()"
+            style="width:100px;height: 40px;margin-left: 10px;background-color: #4bbeef;color: white">pretty json
+    </button>
+    <button class="base64Encode" id="base64Encode" name="base64 encode" onclick="base64Encode()"
+            style="width: 120px;height: 40px;margin-left: 10px;background-color: #4b6eef;color: white">base64 encode
+    </button>
+    <button class="base64Decode" id="base64Decode" value="base64 decode" onclick="base64Decode()"
+            style="width: 120px;height: 40px;margin-left: 10px;background-color: #4bbeef;color: white">base64 decode
+    </button>
+    <button class="urlEncode" id="urlEncode" value="url encode" onclick="urlEncode()"
+            style="width:100px;height: 40px;margin-left: 10px;background-color: #4b6eef;color: white">url encode
+    </button>
+    <button class="urlDecode" id="urlDecode" value="url decode" onclick="urlDecode()"
+            style="width:100px;height: 40px;margin-left: 10px;background-color: #4bbeef;color: white">url decode
+    </button>
+    <button class="md5" id="md5" value="md5" onclick="md5()"
+            style="width:100px;height: 40px;margin-left: 10px;background-color: #4b6eef;color: white">md5
+    </button>
+</div>
+<div>
+    <label for="result"></label>
+    <pre><code>
+    <textarea required wrap="hard" class="result" id="result"
+              style="flex: auto;height: 300px;width: 1200px"></textarea>
+</code></pre>
+</div>
+</body>
+<script>
+    function json2yaml() {
+        let data = document.getElementById("original").value
+        if (data.length === 0) {
+            return
+        }
+        request("post", "/json2yaml", data).then(result => {
+            document.getElementById("result").value = result
+        }, error => {
+            document.getElementById("result").value = error
+        })
+    }
+
+    function yaml2json() {
+        let data = document.getElementById("original").value
+        if (data.length === 0) {
+            return
+        }
+        request("post", "/yaml2json", data).then(result => {
+            document.getElementById("result").value = result
+        }, error => {
+            document.getElementById("result").value = error
+        })
+    }
+
+    function json2string() {
+        let data = document.getElementById("original").value
+        if (data.length === 0) {
+            return
+        }
+        request("post", "/json2string", data).then(result => {
+            document.getElementById("result").value = result
+        }, error => {
+            document.getElementById("result").value = error
+        })
+    }
+
+    function string2json() {
+        let data = document.getElementById("original").value
+        if (data.length === 0) {
+            return
+        }
+        request("post", "/string2json", data).then(result => {
+            document.getElementById("result").value = result
+        }, error => {
+            document.getElementById("result").value = error
+        })
+    }
+
+    function base64Encode() {
+        let data = document.getElementById("original").value
+        if (data.length === 0) {
+            return
+        }
+        request("post", "/base64encode", data).then(result => {
+            document.getElementById("result").value = result
+        }, error => {
+            document.getElementById("result").value = error
+        })
+    }
+
+    function base64Decode() {
+        let data = document.getElementById("original").value
+        if (data.length === 0) {
+            return
+        }
+        request("post", "/base64decode", data).then(result => {
+            document.getElementById("result").value = result
+        }, error => {
+            document.getElementById("result").value = error
+        })
+    }
+
+    function urlEncode() {
+        let data = document.getElementById("original").value
+        if (data.length === 0) {
+            return
+        }
+        request("post", "/urlencode", data).then(result => {
+            document.getElementById("result").value = result
+        }, error => {
+            document.getElementById("result").value = error
+        })
+    }
+
+    function urlDecode() {
+        let data = document.getElementById("original").value
+        if (data.length === 0) {
+            return
+        }
+        request("post", "/urldecode", data).then(result => {
+            document.getElementById("result").value = result
+        }, error => {
+            document.getElementById("result").value = error
+        })
+    }
+
+    function md5() {
+        let data = document.getElementById("original").value
+        if (data.length === 0) {
+            return
+        }
+        request("post", "/md5", data).then(result => {
+            document.getElementById("result").value = result
+        }, error => {
+            document.getElementById("result").value = error
+        })
+    }
+
+    function request(method, url, data) {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open(method, url, true);
+            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            xhr.onload = function () {
+                console.log("response: " + this.responseText)
+                if (this.status === 200) {
+                    const response = JSON.parse(this.responseText);
+                    console.log(response)
+                    if (200 !== response.code) {
+                        resolve(response.message);
+                        return
+                    }
+                    resolve(response.data)
+                    return;
+                } else {
+                    const response = JSON.parse(this.responseText);
+                    console.log(response)
+                    const error = new Error(response.code);
+                    error.status = response.message;
+                    reject(error);
+                }
+            };
+            xhr.onerror = function () {
+                console.log(this)
+                console.log("this is error," + this.status)
+                reject(new Error('network error'));
+            };
+            xhr.send(data);
+        });
+    }
+</script>
+</html>
